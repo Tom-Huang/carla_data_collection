@@ -27,6 +27,7 @@ semantic_dict[12] = (220, 220, 0)  # traffic sign
 
 def find_lidar_data_path(foldername: str):
     dir_list = os.listdir(foldername)
+    print(dir_list)
     data_paths = []
     data_paths.append(foldername + "/" + dir_list[0] + "/" + "Lidar/")
     return data_paths
@@ -66,7 +67,7 @@ def projection(p_3d, intrinsics):
     # print(p_3d)
     # print(p_2d)
     # ########################
-    return int(p_2d[0]),int(p_2d[1])
+    return int(p_2d[0]), int(p_2d[1])
 
 
 class LidarData:
@@ -113,7 +114,8 @@ class LidarData:
         elif direction == 'rear':
             point_inds = self.ply_rear_data_ids
         else:
-            raise Exception("direction argument can only be left, right, rear, front!")
+            raise Exception(
+                "direction argument can only be left, right, rear, front!")
         intrinsic_mat = get_intrinsic(image_size_x, image_size_y, camera_fov)
         tags = []
         #############################
@@ -152,8 +154,8 @@ class LidarData:
             if "030" in self.data_filename and (-18 < self.ply_data.elements[0].data[p_ind][0] < -13) and (-2 < self.ply_data.elements[0].data[p_ind][1] < -0.5):
                 p_2d = projection(p_3d.reshape((3, 1)), intrinsic_mat)
                 print(intrinsic_mat)
-                print(self.ply_data.elements[0].data[p_ind], "\t", p_2d, "\t", seg_image_data[p_2d[1], p_2d[0]][0])
-
+                print(self.ply_data.elements[0].data[p_ind], "\t",
+                      p_2d, "\t", seg_image_data[p_2d[1], p_2d[0]][0])
 
         ############################
         print("outliers num: ", outliers_num)
@@ -172,33 +174,37 @@ class LidarData:
     def save_labeled_data_as_ply(self, save_path):
         labeled_data_filename = "labeled_" + self.data_filename
         vertex = np.empty((len(self.ply_data.elements[0].data)),
-                          dtype=[('x', 'f4'), ('y', 'f4'), ('z', 'f4'), ('red', 'u1'), ('green', 'u1'), ('blue', 'u1'),('label','u1')])
+                          dtype=[('x', 'f4'), ('y', 'f4'), ('z', 'f4'), ('red', 'u1'), ('green', 'u1'), ('blue', 'u1'), ('label', 'u1')])
         vertex_i = 0
         for i, p_i in enumerate(self.ply_front_data_ids):
             p_3d = self.ply_data.elements[0].data[p_i]
             vertex[vertex_i] = (
-                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_front[i]][0], semantic_dict[self.tag_front[i]][1],
+                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_front[i]
+                                                         ][0], semantic_dict[self.tag_front[i]][1],
                 semantic_dict[self.tag_front[i]][2], self.tag_front[i])
             vertex_i += 1
 
         for i, p_i in enumerate(self.ply_left_data_ids):
             p_3d = self.ply_data.elements[0].data[p_i]
             vertex[vertex_i] = (
-                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_left[i]][0], semantic_dict[self.tag_left[i]][1],
+                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_left[i]
+                                                         ][0], semantic_dict[self.tag_left[i]][1],
                 semantic_dict[self.tag_left[i]][2], self.tag_left[i])
             vertex_i += 1
 
         for i, p_i in enumerate(self.ply_right_data_ids):
             p_3d = self.ply_data.elements[0].data[p_i]
             vertex[vertex_i] = (
-                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_right[i]][0], semantic_dict[self.tag_right[i]][1],
+                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_right[i]
+                                                         ][0], semantic_dict[self.tag_right[i]][1],
                 semantic_dict[self.tag_right[i]][2], self.tag_right[i])
             vertex_i += 1
 
         for i, p_i in enumerate(self.ply_rear_data_ids):
             p_3d = self.ply_data.elements[0].data[p_i]
             vertex[vertex_i] = (
-                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_rear[i]][0], semantic_dict[self.tag_rear[i]][1],
+                p_3d[0], p_3d[1], p_3d[2], semantic_dict[self.tag_rear[i]
+                                                         ][0], semantic_dict[self.tag_rear[i]][1],
                 semantic_dict[self.tag_rear[i]][2], self.tag_rear[i])
             vertex_i += 1
 
@@ -213,7 +219,8 @@ if __name__ == "__main__":
     lidar_data_filename_list = os.listdir(lidar_data_path[0])
     for lidar_filename in lidar_data_filename_list:
         lidar_data = LidarData(lidar_data_path[0], lidar_filename)
-        seg_filename, seg_img_ind = lidar_filename.rstrip(".ply")[0], int(lidar_filename.rstrip(".ply")[1:]) - 1
+        seg_filename, seg_img_ind = lidar_filename.rstrip(
+            ".ply")[0], int(lidar_filename.rstrip(".ply")[1:]) - 1
         seg_filename = seg_filename + ".npy"
 
         seg_data_paths = npy2png.find_seg_data_path(data_folder)
@@ -231,8 +238,11 @@ if __name__ == "__main__":
                 direction_flag = "rear"
             else:
                 continue
+            # this will load .npy file
+            # TODO: modify this code to adapt to .png semantic
             seg_img = np.load(seg_data_path + seg_filename)
-            lidar_data.add_tag(seg_img[seg_img_ind], direction_flag, WINDOW_WIDTH, WINDOW_HEIGHT, FOV)
+            lidar_data.add_tag(
+                seg_img[seg_img_ind], direction_flag, WINDOW_WIDTH, WINDOW_HEIGHT, FOV)
         print("tags for {0} added.".format(lidar_filename))
         lidar_save_path = lidar_data_path[0]
         if lidar_save_path[-1] != "/":

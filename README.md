@@ -16,21 +16,27 @@ The code is for CARLA version 0.9.4. It needs to be modified to adapt to other v
 
 After generation of the semantic image for front view, left view, right view and rear view and the lidar point cloud at the same time step, you may want to generate the semantic point cloud(point cloud with different colors according to their semantic meanings). The usage is as below:
 
-1. Go to folder `lidar_processing`.
+1. Install `plyfile`
 
-```python
+```bash
+pip install plyfile
+```
+
+2. Go to folder `lidar_processing`. Make sure the semantic image data generated in `Data Generation` part are .npy format(in the repository the .npy file is too big to attach, so I put the .png image for visualization) and the lidar point is in .ply format.
+
+```bash
 cd ./lidar_processing
 ```
 
-2. If the four views of data are generated with the code in Data Generation as .npy format, you have to run the `npy2png.py` file first.
+3. If you want to convert .npy file of semantic image into .png file for better visualization, you can run the `npy2png.py` file.
 
-```python
+```bash
 python npy2png.py
 ```
 
-3. If the four views of data are already .png format or after you do the step 1, you can run the following to generate semantic lidar points. The results will be in `./data/for_training/2019-05-31_22_05/Lidar/labeled/`.
+4. You can run the following to generate semantic lidar points. The results will be in `./data/for_training/2019-05-31_22_05/Lidar/labeled/`.
 
-```python
+```bash
 python add_lidar_label.py
 ```
 
