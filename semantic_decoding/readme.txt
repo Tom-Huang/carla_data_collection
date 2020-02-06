@@ -1,0 +1,1 @@
+the semantic data has two folders: semantic and processed_semantic. "semantic" stores label information(from 0 to 12) in the R channel of RGBA image. "processed_semantic" stores rgb images which were processed by code "semantic_reading.py".
