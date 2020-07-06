@@ -6,7 +6,7 @@ The code is for CARLA version 0.9.4. It needs to be modified to adapt to other v
 
 ### Data Generation
 
-1. Copy files in "poseprocesseffect" to "carla_root_folder/Unreal/CarlaUE4/Plugins/Carla/Content/PostProcessingMaterials"
+1. Copy files in "poseprocesseffect" to "carla_root_folder/Unreal/CarlaUE4/Plugins/Carla/Content/PostProcessingMaterials" and **recompile carla**.
 
 2. put "collect_albedo_depth_normal.py" to "carla_root_folder/PythonAPI/examples" and run it using terminal. You can modify the code to generate the lidar point cloud and the semantic image for front view, left view, right view and rear view simultaneously(just uncomment some lines).
 
